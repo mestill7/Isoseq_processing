@@ -1,0 +1,19 @@
+{
+    "__default__" :
+    {
+        "queue"     : "premium",
+        "allocation": "acc_ABC",
+        "tasks"        : 1,
+        "memory"    : 32000,
+        "resources" : "\"rusage[mem=12000] span[hosts=1]\"",
+        "jobname"      : "{rule}.{wildcards}",
+        "output"    : "logs/{rule}.{wildcards}.o",
+        "error"     : "logs/{rule}.{wildcards}.e",
+        "walltime"    : "00:10"
+    },
+
+    "gmap_align" :
+    {
+        "walltime"    : "1:00"
+    },
+}
