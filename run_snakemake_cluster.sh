@@ -1,5 +1,5 @@
 conda activate py3
-snakemake --snakefile snake1 \
+snakemake --snakefile Snakefile \
     -j 499 \
     --cluster-config cluster.json \
     --cluster "bsub \
