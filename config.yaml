@@ -8,7 +8,7 @@ genome_index_name: "mm10"
 
 tmpdir: ""
 
-sample_list: "/path/to/snake_iso/sample_list2.txt" ## text file of sample names
+sample_list: "/path/to/snake_iso/sample_list.txt" ## text file of sample names
 
 fastq_dir: "/path/to/data" ## location of fasta files
 
