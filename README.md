@@ -127,5 +127,4 @@ In that case, the following awk script will extract the isoform name (1st column
 associated known transcript (2nd, 3rd columns) and MatchAnnot score (4th column):
 
 _Enter directory holding your matchannot results first_
-```awk 'BEGIN {OFS="\t"}; {if($1=="result:") print $2,$3,$4,$8}' \
-Merged_samples_matchannot.txt > Merged_samples_matchannot_simplified.txt```
+```awk 'BEGIN {OFS="\t"}; {if($1=="result:") print $2,$3,$4,$8}' Merged_samples_matchannot.txt > Merged_samples_matchannot_simplified.txt```
