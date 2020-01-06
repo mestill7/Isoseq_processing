@@ -31,19 +31,33 @@ rule merge_samples:
     run:
         shell("cat {input} > {output}")
 
+rule gmap_build_idx:
+    input:
+        expand("{ginloc}",ginloc=config["genome_sequence"])[0]
+    output:
+        expand("{ginloc}/{gname}/{gname}.chromosome",ginloc=config["genome_index_loc"],gname = config["genome_index_name"])[0]
+    log:
+        "logs/Create_gmap_index.log"
+    params:
+        gindex_location = config["genome_index_loc"],
+        gname = config["genome_index_name"]
+    shell:
+        "gmap_build -d {params.gname} -D {params.gindex_location} {input}"
+
 rule gmap_align:
     input:
         fa = expand("{outdir}/Merged_samples.fasta",outdir=config["out_dir"])[0],
-        gindex_location = expand("{ginloc}",ginloc=config["genome_index_loc"])[0]
+        gindex_veritas = expand("{ginloc}/{gname}/{gname}.chromosome",ginloc=config["genome_index_loc"],gname = config["genome_index_name"])[0]
     output:
         temp(expand("{outdir}/align/Merged_samples.sam",outdir=config["out_dir"])[0])
     params:
-        config["genome_index_name"]
+        gloc = config["genome_index_loc"],
+        gname = config["genome_index_name"]
     log:
         "logs/Merged_samples.alignment.log"
     shell:
-        "module load gmap/2019-02-15\n"
-        "gmap -D {input.gindex_location} -d {params} -f samse -n 0 -t 15 --max-intronlength-ends 200000 -z sense_force {input.fa} > {output}"
+        "gmap -D {params.gloc} -d {params.gname} -f samse -n 0 -t 15 --max-intronlength-ends 200000 -z sense_force {input.fa} > {output}"
+
 
 rule sort_gmap:
     input:
@@ -65,10 +79,6 @@ rule collapse_sam:
     params:
         config["out_dir"]
     run:
-        shell("module load gmap/2019-02-15\n"),
-        shell("module load R\n"),
-        shell("PATH=$PATH:/sc/hydra/work/estilm01/Tools/cDNA_Cupcake/sequence/\n"),
-        shell("which collapse_isoforms_by_sam.py\n"),
         shell("collapse_isoforms_by_sam.py --input {input.fasta} -s {input.sam} --dun-merge-5-shorter -o {params}/align/Merged_samples_gmap")
 
 rule get_abundance:
@@ -80,12 +90,9 @@ rule get_abundance:
     params:
         config["out_dir"]
     run:
-        shell("module load gmap/2019-02-15\n"),
-        shell("module load R\n"),
-        shell("PATH=$PATH:/sc/hydra/work/estilm01/Tools/cDNA_Cupcake/sequence/\n"),
         shell("get_abundance_post_collapse.py {params}/align/Merged_samples_gmap.collapsed {input.cluster}")
 
-rule generate_squanti_script:
+rule generate_squanti:
     input:
         collapsed_gff = expand("{outdir}/align/Merged_samples_gmap.collapsed.gff",outdir=config["out_dir"])[0],
         fl = expand("{outdir}/align/Merged_samples_gmap.collapsed.abundance.txt",outdir=config["out_dir"])[0]
@@ -98,9 +105,6 @@ rule generate_squanti_script:
     output:
         expand("{outdir}/temp/generate_sqanti_qc.sh",outdir=config["out_dir"])[0]
     run:
-        shell("echo \"conda activate sqanti\nmodule load gmap/2019-02-15\nmodule load R\nexport PYTHONPATH=\$PYTHONPATH:/path/to/Tools/cDNA_Cupcake/sequence/\" > {output}"),
-        shell("echo \"cd {params.out_dir}/align\" >> {output}"),
-        shell("echo \"python /path/to/Tools/sqanti/sqanti_qc.py -g -x {params.index}/{params.index_name} -t 20 -o Merged_samples_sqanti --fl_count {input.fl} {input.collapsed_gff} {params.ref_gtf} {params.genome_seq}\" >> {output}"),
-        shell("echo \"cd {params.out_dir}/align\" >> {output}"),
-        shell("echo \"python /path/to/Tools/sqanti/sqanti_filter.py {params.out_dir}/align/Merged_samples_sqanti_classification.txt\" >> {output}"),
-        shell("echo \"conda deactivate\" >> {output}")
+        shell("echo \"python ~/Tools/SQANTI2/sqanti_qc2.py -g -x {params.index}/{params.index_name} -t 20 -d {params.out_dir}/align -o Merged_samples_sqanti --fl_count {input.fl} {input.collapsed_gff} {params.ref_gtf} {params.genome_seq}\" >> {output}")
+        shell("echo \"python ~/Tools/SQANTI2/sqanti_filter2.py --faa {params.out_dir}/align/Merged_samples_gmap.collapsed_corrected.faa --sam {params.out_dir}/align/Merged_samples.sorted.sam {params.out_dir}/align/Merged_samples_sqanti_classification.txt {params.out_dir}/align/Merged_samples_gmap.collapsed_corrected.fasta {params.out_dir}/align/Merged_samples_gmap.collapsed_corrected.gtf\" >> {output}")
+        shell("echo \"python2 ~/Tools/MatchAnnot/matchAnnot.py --gtf={params.ref_gtf} --format='alt' {params.out_dir}/align/Merged_samples.sorted.sam  > {params.out_dir}/align/Merged_samples_matchannot.txt\" >> {output}")

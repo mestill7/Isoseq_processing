@@ -8,11 +8,11 @@ genome_index_name: "mm10"
 
 tmpdir: ""
 
-sample_list: "/path/to/snake_iso/sample_list.txt" ## text file of sample names
+sample_list: "/path/to/isoseq_dir/sample_list.txt" ## text file of sample names
 
 fastq_dir: "/path/to/data" ## location of fasta files
 
-out_dir: "/path/to/snake_iso" ## directory to hold results
+out_dir: "/path/to/isoseq_dir" ## directory to hold results
 
 cluster_report: "/path/to/data/IsoSeq.polished.cluster_report.csv"
 
