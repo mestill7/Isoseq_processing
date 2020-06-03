@@ -2,7 +2,7 @@
     "__default__" :
     {
         "queue"     : "premium",
-        "allocation": "acc_ABC",
+        "allocation": "acc_XXXXXXX",
         "tasks"        : 1,
         "memory"    : 32000,
         "resources" : "\"rusage[mem=12000] span[hosts=1]\"",
@@ -14,7 +14,19 @@
 
     "gmap_align" :
     {
-        "walltime"    : "5:00"
+        "walltime"    : "5:00",
+        "resources" : "\"rusage[mem=35000] span[hosts=1]\""
     },
 
+    "collapse_sam" :
+    {
+        "walltime"    : "2:00",
+        "resources" : "\"rusage[mem=35000] span[hosts=1]\""
+    },
+
+    "generate_squanti" :
+    {
+        "walltime"    : "2:00",
+        "resources" : "\"rusage[mem=35000] span[hosts=1]\""
+    }
 }

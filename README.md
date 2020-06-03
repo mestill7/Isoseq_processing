@@ -28,6 +28,11 @@ python setup.py build
 
 python setup.py install
 
+### Install TAMA
+
+cd ~/Tools/
+
+git clone https://github.com/mestill7/tama.git
 
 ### Install SQANTI2
 https://github.com/Magdoll/SQANTI2/
@@ -61,7 +66,7 @@ conda activate isoseq_proc
 
 export PYTHONPATH=$PYTHONPATH:~/Tools/cDNA_Cupcake/sequence/
 
-PATH=$PATH:~/Tools/SQANTI2
+export PYTHONPATH=$PYTHONPATH:~/Tools/cDNA_Cupcake/
 
 module load R
 
@@ -72,8 +77,6 @@ export PATH=$PATH:\~/Tools
 python ~/Tools/SQANTI2/sqanti_qc2.py --help
 
 python ~/Tools/SQANTI2/sqanti_filter2.py --help
-
-which collapse_isoforms_by_sam.py
 
 ### Create directory structure for snakemake process
 For this example, let's say your directory is "\~/isoseq"
@@ -111,14 +114,8 @@ Currently, the Snakemake file will combine the input fasta files and process the
 single file. Future implementations of the pipeline will allow individual fasta 
 files to be processed independently.
 
-Running the Snakemake process produces the results files from ToFU/Cupcake and 
-creates a shell script for running SQANTI2 and matchannot. To produce the SQANTI2 
-and matchannot results, now enter your output directory 
-and use the following command:
-``` sh ./temp/generate_sqanti_qc.sh ``` 
-The reason for this detour is errors in the R script that produces SQANTI2's PDF 
-report. Future implementations of the pipeline will attempt to simplify this 
-process. 
+Running the Snakemake process produces the results files from TAMA and 
+runs SQANTI2 and matchannot.  
 
 ### Simplifying matchannot results
 The matchannot program produces an extremely detailed report. However, users may

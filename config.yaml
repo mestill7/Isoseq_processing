@@ -1,5 +1,3 @@
-type: "paired" # single or paired
-
 genome_sequence: "/path/to/mm10/genome.fa" # path to fasta of genome
 
 genome_index_loc: "/path/to/isoseq/gmap" # path to basename of gmap index
@@ -14,10 +12,19 @@ fastq_dir: "/path/to/data" ## location of fasta files
 
 out_dir: "/path/to/isoseq_dir" ## directory to hold results
 
-cluster_report: "/path/to/data/IsoSeq.polished.cluster_report.csv"
-
 merge_samples: "TRUE" ##if multiple samples are present, should they be merged prior to aligning
 
+## Program locations
+
+tama_dir: "/path/to/Tools/tama"
+
+sqanti_dir: "/path/to/Tools/SQANTI2"
+
+matchannot_dir: "/path/to/Tools/MatchAnnot"
+
+cluster_report: "/path/to/data/IsoSeq.polished.cluster_report.csv"
+
+## Additional parameters
 threads_for_alignment: 20
 
 gtf: "/path/to/hisat_genome/UCSC_mm10_compGENCODE22.gtf" # path to reference annotation gtf file
